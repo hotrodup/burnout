@@ -2,7 +2,7 @@ FROM dockerfile/nodejs
 
 WORKDIR /src
 
-ONBUILD ADD package.json /src/
+ONBUILD ADD package.json /src
 ONBUILD RUN npm install
 ONBUILD ADD . /src
 
