@@ -1,12 +1,10 @@
 FROM dockerfile/nodejs
 
-# Set instructions on build.
+WORKDIR /src
+
 ONBUILD ADD package.json /src/
 ONBUILD RUN npm install
 ONBUILD ADD . /src
-
-# Define working directory.
-WORKDIR /src
 
 # Define default command.
 CMD ["npm", "start"]
