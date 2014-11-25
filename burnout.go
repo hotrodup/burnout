@@ -43,8 +43,21 @@ func pingOn(filename, message string, ws *websocket.Conn) *fsnotify.Watcher {
   go func() {
     for {
       select {
-        case _ = <-watcher.Events:
-          if err := ws.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
+        case event := <-watcher.Events:
+          var t string
+          switch {
+            case event.Op&fsnotify.Write == fsnotify.Write:
+              t = "write"
+            case event.Op&fsnotify.Create == fsnotify.Create:
+              t = "create"
+            case event.Op&fsnotify.Remove == fsnotify.Remove:
+              t = "remove"
+            case event.Op&fsnotify.Rename == fsnotify.Rename:
+              t = "rename"
+            default:
+              return
+          }
+          if err := ws.WriteMessage(websocket.TextMessage, []byte(message + t)); err != nil {
             return
           }
         case err := <-watcher.Errors:
