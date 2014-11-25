@@ -6,6 +6,7 @@ import (
   "log"
   fp "path/filepath"
   "gopkg.in/fsnotify.v1"
+  "fmt"
 )
 
 const (
@@ -21,7 +22,12 @@ var (
   }
 )
 
+func baseHandler(w http.ResponseWriter, r *http.Request) {
+  fmt.Fprintf(w, "Hello, server running.")
+}
+
 func main() {
+  http.HandleFunc("/", baseHandler)
   http.HandleFunc("/ws", wsHandler)
   http.ListenAndServe(":8585", nil)
 }
